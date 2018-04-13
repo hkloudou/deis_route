@@ -15,6 +15,11 @@ DEV_IMAGE = $(REGISTRY)$(IMAGE)
 BUILD_IMAGE = $(COMPONENT)-build
 BINARY_DEST_DIR = rootfs/bin
 
+git:
+	-git add .
+	-git commit -m 'build auto commit'
+	-git tag -f 0.1.0
+	-git push origin master -f --tags
 build: check-docker
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 godep go build -a -installsuffix -v -ldflags '-s' -o $(BINARY_DEST_DIR)/boot cmd/boot/boot.go || exit 1
 	@$(call check-static-binary,rootfs/bin/boot)
