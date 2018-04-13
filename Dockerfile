@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM alpine:3.7
 
 # install common packages
 RUN apk add --no-cache \
@@ -11,8 +11,8 @@ RUN apk add --no-cache \
 	sudo
 
 # install confd
-RUN curl -sSL -o /usr/local/bin/confd https://s3-us-west-2.amazonaws.com/opdemand/confd-git-73f7489 \
-  && chmod +x /usr/local/bin/confd
+#RUN curl -sSL -o /usr/local/bin/confd https://s3-us-west-2.amazonaws.com/opdemand/confd-git-73f7489 \
+#  && chmod +x /usr/local/bin/confd
 
 # add nginx user
 RUN addgroup -S nginx && \

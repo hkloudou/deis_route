@@ -50,8 +50,10 @@ get_src 47340cf0c711b10a0231fca9264d73ea791ff8420b823b0295ae3df2d968a205 \
         "https://github.com/vozlt/nginx-module-vts/archive/$VTS_VERSION.tar.gz"
 
 # build nginx
-cd "$BUILD_PATH/nginx-$NGINX_VERSION"
-
+cd "$BUILD_PATH/nginx-$NGINX_VERSION" \
+&& sed -i 's/^#define NGINX_VERSION.*$/#define NGINX_VERSION      "0.1.0"/g' src/core/nginx.h \
+&& sed -i 's/^#define NGINX_VER          "nginx\/" NGINX_VERSION/#define NGINX_VER          "bws\/" NGINX_VERSION/g' src/core/nginx.h \
+&& sed -i 's/^#define NGINX_VAR          "NGINX"/#define NGINX_VAR          "BWS"/g' src/core/nginx.h \
 ./configure \
   --prefix="$PREFIX" \
   --pid-path=/run/nginx.pid \

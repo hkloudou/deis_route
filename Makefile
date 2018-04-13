@@ -24,9 +24,16 @@ build: check-docker
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 godep go build -a -installsuffix -v -ldflags '-s' -o $(BINARY_DEST_DIR)/boot cmd/boot/boot.go || exit 1
 	@$(call check-static-binary,rootfs/bin/boot)
 	echo $(IMAGE)
-	#docker build -t $(IMAGE) .
+	
+	#build confd
+	#hkloudou/gobuilder:alpine3.7-go1.10.1
+	@docker run --rm --privileged=true -w /go/src/code/ hkloudou/gobuilder:alpine3.7-go1.10.1 go version
+	docker run --rm --privileged=true -v $(GOPATH)/src/:/go/src/ -v $(PWD)/rootfs/usr/local/bin/:/go/bin/ -w /code/ hkloudou/gobuilder:alpine3.7-go1.10.1 go build -ldflags "-X main.GitSHA=${GIT_SHA}" -o /go/bin/confd github.com/hkloudou/confd
+	
+	#build router
+	docker build -t $(IMAGE) .
 	rm rootfs/bin/boot
-
+	rm rootfs/usr/local/bin/confd
 clean: check-docker check-registry
 	docker rmi $(IMAGE)
 
